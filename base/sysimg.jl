@@ -158,6 +158,7 @@ include("multinverses.jl")
 using .MultiplicativeInverses
 include("abstractarraymath.jl")
 include("arraymath.jl")
+include("rowvector.jl")
 
 # define MIME"foo/bar" early so that we can overload 3-arg show
 struct MIME{mime} end
@@ -231,6 +232,8 @@ using .Cartesian
 include("multidimensional.jl")
 include("permuteddimsarray.jl")
 using .PermutedDimsArrays
+include("mappedarray.jl")
+using .MappedArrays
 
 # nullable types
 include("nullable.jl")

@@ -49,10 +49,10 @@ function choosetests(choices = [])
         "nullable", "meta", "stacktraces", "libgit2", "docs",
         "markdown", "serialize", "misc", "threads",
         "enums", "cmdlineargs", "i18n", "workspace", "libdl", "int",
-        "checked", "bitset", "floatfuncs", "compile", "distributed", "inline",
+        "checked", "bitset", "floatfuncs", "compile", "inline",
         "boundscheck", "error", "ambiguous", "cartesian", "asmvariant", "osutils",
         "channels", "iostream", "specificity", "codegen", "codevalidation",
-        "reinterpretarray", "syntax"
+        "reinterpretarray", "syntax", "asyncmap"
     ]
 
     if isdir(joinpath(JULIA_HOME, Base.DOCDIR, "examples"))
@@ -147,7 +147,7 @@ function choosetests(choices = [])
         prepend!(tests, ["ambiguous"])
     end
 
-    net_required_for = ["socket", "distributed", "libgit2"]
+    net_required_for = ["socket", "stdlib", "libgit2"]
     net_on = true
     try
         ipa = getipaddr()

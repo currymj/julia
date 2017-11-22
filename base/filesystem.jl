@@ -41,8 +41,8 @@ export File,
 import Base:
     UVError, _sizeof_uv_fs, check_open, close, eof, eventloop, fd, isopen,
     nb_available, position, read, read!, readavailable, seek, seekend, show,
-    skip, stat, unsafe_read, unsafe_write, transcode, uv_error, uvhandle,
-    uvtype, write
+    skip, stat, unsafe_read, unsafe_write, write, transcode, uv_error,
+    rawhandle, OS_HANDLE, INVALID_OS_HANDLE
 
 if Sys.iswindows()
     import Base: cwstring
@@ -59,13 +59,14 @@ abstract type AbstractFile <: IO end
 
 mutable struct File <: AbstractFile
     open::Bool
-    handle::RawFD
-    File(fd::RawFD) = new(true, fd)
+    handle::OS_HANDLE
+    File(fd::OS_HANDLE) = new(true, fd)
+end
+if OS_HANDLE !== RawFD
+    File(fd::RawFD) = File(Libc._get_osfhandle(fd))
 end
 
-# Not actually a pointer, but that's how we pass it through the C API so it's fine
-uvhandle(file::File) = convert(Ptr{Void}, Base.cconvert(Cint, file.handle) % UInt)
-uvtype(::File) = Base.UV_RAW_FD
+rawhandle(file::File) = file.handle
 
 # Filesystem.open, not Base.open
 function open(path::AbstractString, flags::Integer, mode::Integer=0)
@@ -75,16 +76,17 @@ function open(path::AbstractString, flags::Integer, mode::Integer=0)
         ret = ccall(:uv_fs_open, Int32,
                     (Ptr{Void}, Ptr{Void}, Cstring, Int32, Int32, Ptr{Void}),
                     eventloop(), req, path, flags, mode, C_NULL)
-        handle = ccall(:jl_uv_fs_result, Int32, (Ptr{Void},), req)
+        handle = ccall(:jl_uv_fs_result, Cssize_t, (Ptr{Void},), req)
         ccall(:uv_fs_req_cleanup, Void, (Ptr{Void},), req)
         uv_error("open", ret)
     finally # conversion to Cstring could cause an exception
         Libc.free(req)
     end
-    return File(RawFD(handle))
+    return File(OS_HANDLE(@static Sys.iswindows() ? Ptr{Void}(handle) : Cint(handle)))
 end
 
 isopen(f::File) = f.open
+
 function check_open(f::File)
     if !isopen(f)
         throw(ArgumentError("file is closed"))
@@ -93,9 +95,9 @@ end
 
 function close(f::File)
     check_open(f)
-    err = ccall(:jl_fs_close, Int32, (Int32,), f.handle)
+    err = ccall(:jl_fs_close, Int32, (OS_HANDLE,), f.handle)
     uv_error("close", err)
-    f.handle = RawFD(-1)
+    f.handle = INVALID_OS_HANDLE
     f.open = false
     return nothing
 end

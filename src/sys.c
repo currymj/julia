@@ -116,7 +116,7 @@ JL_DLLEXPORT int32_t jl_nb_available(ios_t *s)
 JL_DLLEXPORT int jl_sizeof_uv_fs_t(void) { return sizeof(uv_fs_t); }
 JL_DLLEXPORT void jl_uv_fs_req_cleanup(uv_fs_t *req) { uv_fs_req_cleanup(req); }
 JL_DLLEXPORT char *jl_uv_fs_t_ptr(uv_fs_t *req) { return (char*)req->ptr; }
-JL_DLLEXPORT int jl_uv_fs_result(uv_fs_t *f) { return f->result; }
+JL_DLLEXPORT ssize_t jl_uv_fs_result(uv_fs_t *f) { return f->result; }
 
 // --- stat ---
 JL_DLLEXPORT int jl_sizeof_stat(void) { return sizeof(uv_stat_t); }
@@ -147,7 +147,7 @@ JL_DLLEXPORT int32_t jl_lstat(const char *path, char *statbuf)
     return ret;
 }
 
-JL_DLLEXPORT int32_t jl_fstat(int fd, char *statbuf)
+JL_DLLEXPORT int32_t jl_fstat(uv_os_fd_t fd, char *statbuf)
 {
     uv_fs_t req;
     int ret;

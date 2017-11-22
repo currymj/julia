@@ -79,12 +79,8 @@ endif
 HEADERS := $(BUILDDIR)/julia_version.h $(wildcard $(SRCDIR)/support/*.h) $(addprefix $(SRCDIR)/,julia.h julia_assert.h julia_threads.h tls.h locks.h atomics.h julia_internal.h options.h timing.h)
 PUBLIC_HEADERS := $(BUILDDIR)/julia_version.h $(wildcard $(SRCDIR)/support/*.h) $(addprefix $(SRCDIR)/,julia.h julia_assert.h julia_threads.h tls.h locks.h atomics.h)
 ifeq ($(USE_SYSTEM_LIBUV),0)
-ifeq ($(OS),WINNT)
-HEADERS += $(build_includedir)/tree.h
-PUBLIC_HEADERS += $(build_includedir)/tree.h
-endif
 HEADERS += $(LIBUV_INC)/uv.h
-PUBLIC_HEADERS += $(LIBUV_INC)/uv*
+HEADERS += $(LIBUV_INC)/uv/*.h
 endif
 PUBLIC_HEADER_TARGETS := $(addprefix $(build_includedir)/julia/,$(notdir $(PUBLIC_HEADERS)))
 

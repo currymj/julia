@@ -1281,6 +1281,9 @@ export conv, conv2, deconv, filt, filt!, xcorr
 @eval @deprecate_moved $(Symbol("@dateformat_str")) "Dates" true true
 @deprecate_moved now "Dates" true true
 
+@deprecate_moved eigs "Arnoldi" true true
+@deprecate_moved svds "Arnoldi" true true
+
 # PR #21709
 @deprecate cov(x::AbstractVector, corrected::Bool) cov(x, corrected=corrected)
 @deprecate cov(x::AbstractMatrix, vardim::Int, corrected::Bool) cov(x, vardim, corrected=corrected)

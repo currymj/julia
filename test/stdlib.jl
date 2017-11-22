@@ -10,5 +10,6 @@ cd(joinpath(JULIA_HOME,"..","share","julia","site","v$(VERSION.major).$(VERSION.
         warn("Skipping Profile tests")
         filter!(x -> (x != "Profile"), pkgs)
     end
+    Base.USE_GPL_LIBS || filter!(x->x != "Arnoldi", pkgs)
     Pkg.Entry.test(convert(Vector{AbstractString}, pkgs))
 end

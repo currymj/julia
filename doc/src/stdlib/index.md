@@ -29,3 +29,4 @@
   * [Shared Arrays](@ref)
   * [Base64](@ref)
   * [File Events](@ref lib-filewatching)
+  * [Arnoldi Iteration](@ref lib-arnoldi)

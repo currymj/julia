@@ -161,9 +161,9 @@ JL_DLLEXPORT int jl_process_events(uv_loop_t *loop)
 #define UV_STREAM_WRITABLE 0x40   /* The stream is writable */
 #endif
 
-JL_DLLEXPORT int jl_pipe_open(uv_pipe_t *pipe, struct { uv_os_fd_t fd; } fd, int readable, int writable)
+JL_DLLEXPORT int jl_pipe_open(uv_pipe_t *pipe, uv_os_fd_t fd, int readable, int writable)
 {
-    int err = uv_pipe_open(pipe, fd.fd);
+    int err = uv_pipe_open(pipe, fd);
 #ifndef _OS_WINDOWS_
     // clear flags set erroneously by libuv:
     if (!readable)

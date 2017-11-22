@@ -193,8 +193,8 @@ function TTY(fd::RawFD; readable::Bool = false)
     tty = TTY(Libc.malloc(_sizeof_uv_tty), StatusUninit)
     # This needs to go after associate_julia_struct so that there
     # is no garbage in the ->data field
-    err = ccall(:uv_tty_init, Int32, (Ptr{Void}, Ptr{Void}, Int32, Int32),
-        eventloop(), tty.handle, fd.fd, readable)
+    err = ccall(:uv_tty_init, Int32, (Ptr{Void}, Ptr{Void}, RawFD, Int32),
+        eventloop(), tty.handle, fd, readable)
     uv_error("TTY", err)
     tty.status = StatusOpen
     return tty
@@ -627,7 +627,7 @@ end
 
 if Sys.iswindows()
     function close_pipe_sync(handle::WindowsRawSocket)
-        ccall(:CloseHandle, stdcall, Cint, (Ptr{Void},), handle)
+        ccall(:CloseHandle, stdcall, Cint, (WindowsRawSocket,), handle)
         nothing
     end
 else

@@ -75,7 +75,7 @@ macro stat_call(sym, arg1type, arg)
     end
 end
 
-stat(fd::RawFD)     = @stat_call jl_fstat Int32 fd.fd
+stat(fd::RawFD)     = @stat_call jl_fstat RawFD fd
 stat(fd::Integer)   = @stat_call jl_fstat Int32 fd
 stat(path::AbstractString)  = @stat_call jl_stat  Cstring path
 lstat(path::AbstractString) = @stat_call jl_lstat Cstring path

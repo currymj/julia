@@ -295,14 +295,6 @@ function first_utf8_byte(ch::Char)
     return b
 end
 
-function reverseind(s::String, i::Integer)
-    j = sizeof(s) + 1 - i
-    @inbounds while is_valid_continuation(codeunit(s, j))
-        j -= 1
-    end
-    return j
-end
-
 ## overload methods for efficiency ##
 
 isvalid(s::String, i::Integer) =

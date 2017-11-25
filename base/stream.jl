@@ -1000,8 +1000,8 @@ for (x, writable, unix_fd, c_symbol) in
             global $x
             posix_fd = _fd(stream)
             @static if Sys.iswindows()
-                ccall(:SetStdHandle, stdcall, Int32, (Int32, Ptr{Void}),
-                    $(-10 - unix_fd), Libc._get_osfhandle(posix_fd).handle)
+                ccall(:SetStdHandle, stdcall, Int32, (Int32, OS_HANDLE),
+                    $(-10 - unix_fd), Libc._get_osfhandle(posix_fd))
             end
             dup(posix_fd, RawFD($unix_fd))
             $x = stream

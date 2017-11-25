@@ -39,7 +39,7 @@ if Sys.iswindows()
     _get_osfhandle(fd::RawFD) = ccall(:_get_osfhandle, WindowsRawSocket, (RawFD,), fd)
     _get_osfhandle(fd::WindowsRawSocket) = fd
     function dup(src::WindowsRawSocket)
-        new_handle = Ref{WindowsRawSocket}(-1)
+        new_handle = Ref(WindowsRawSocket(Ptr{Void}(-1)))
         my_process = ccall(:GetCurrentProcess, stdcall, Ptr{Void}, ())
         DUPLICATE_SAME_ACCESS = 0x2
         status = ccall(:DuplicateHandle, stdcall, Int32,
